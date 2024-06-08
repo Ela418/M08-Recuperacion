@@ -2,7 +2,6 @@ package com.example.pokeapi20.model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pokeapi20.data.PokeRespuesta
 import com.example.pokeapi20.data.PokeService
 import com.example.pokeapi20.data.Pokemon
 import retrofit2.Call
@@ -11,7 +10,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class PokeInfoViewModel(): ViewModel() {
+class PokeInfoViewModel : ViewModel() {
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("https://pokeapi.co/api/v2/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -21,7 +20,6 @@ class PokeInfoViewModel(): ViewModel() {
 
     val pokeInfo = MutableLiveData<Pokemon>()
     val pokeDescription = MutableLiveData<Pokemon>()
-    val pokemonList = MutableLiveData<PokeRespuesta>()
 
     fun getPokemonInfo(id: Int) {
         val call = service.getPokemonInfo(id)
@@ -48,21 +46,6 @@ class PokeInfoViewModel(): ViewModel() {
             }
 
             override fun onFailure(call: Call<Pokemon>, t: Throwable) {
-                call.cancel()
-            }
-        })
-    }
-
-    fun getPokemonList(limit: Int = 100, offset: Int = 0) {
-        val callList = service.getPokemonList(limit, offset)
-        callList.enqueue(object : Callback<PokeRespuesta> {
-            override fun onResponse(call: Call<PokeRespuesta>, response: Response<PokeRespuesta>) {
-                response.body()?.let { pokeRespuesta ->
-                    pokemonList.postValue(pokeRespuesta)
-                }
-            }
-
-            override fun onFailure(call: Call<PokeRespuesta>, t: Throwable) {
                 call.cancel()
             }
         })

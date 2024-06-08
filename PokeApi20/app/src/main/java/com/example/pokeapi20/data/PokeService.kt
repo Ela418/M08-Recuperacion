@@ -1,19 +1,22 @@
 package com.example.pokeapi20.data
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.telecom.Call
-import retrofit2.http.*
-import com.example.pokeapi20.data.Pokemon
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface PokeService {
-
-    @GET("pokemon/{id}")
+    @GET("pokemon/{id}/")
     fun getPokemonInfo(@Path("id") id: Int): Call<Pokemon>
 
-    @GET("pokemon")
-    fun getPokemonList(@Query("limit") limit: Int, @Query("offset") offset : Int): Call<PokeRespuesta>
-
-    @GET("pokemon-species/{id}")
+    @GET("pokemon-species/{id}/")
     fun getPokemonSpecies(@Path("id") id: Int): Call<Pokemon>
+}
+
+interface PokeApiService {
+
+    @GET("pokemon?limit=1032")
+    fun getPokemonList(): Call<PokemonResponse>
+
+    @GET("pokemon/{id}")
+    fun getPokemonInfo(@Path("id") id: Int): Call<PokemonDetail>
 }

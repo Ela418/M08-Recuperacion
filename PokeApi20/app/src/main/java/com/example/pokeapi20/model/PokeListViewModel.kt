@@ -1,41 +1,84 @@
 package com.example.pokeapi20.model
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pokeapi20.data.PokeRespuesta
-import com.example.pokeapi20.data.PokeResult
-import com.example.pokeapi20.data.PokeService
+import com.example.pokeapi20.data.ApiClient
+import com.example.pokeapi20.data.Pokemon
+import com.example.pokeapi20.data.PokemonResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class PokeListViewModel() : ViewModel() {
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://pokeapi.co/api/v2/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+class PokeListViewModel : ViewModel() {
 
-    private val service: PokeService = retrofit.create(PokeService::class.java)
+    private val _pokemonList = MutableLiveData<List<Pokemon>>()
+    val pokemonList: LiveData<List<Pokemon>> get() = _pokemonList
 
-    val pokemonList = MutableLiveData<List<PokeResult>>()
+    init {
+        getPokemons()
+    }
 
-    fun getPokemonList(){
-        val call = service.getPokemonList(251,0)
-
-        call.enqueue(object : Callback<PokeRespuesta> {
-            override fun onResponse(call: Call<PokeRespuesta>, response: Response<PokeRespuesta>) {
-                response.body()?.results?.let { list ->
-                    pokemonList.postValue(list)
+    fun getPokemons() {
+        ApiClient.pokeApiService.getPokemonList().enqueue(object : Callback<PokemonResponse> {
+            override fun onResponse(call: Call<PokemonResponse>, response: Response<PokemonResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.results?.let { results ->
+                        val pokemonList = results.map { result ->
+                            val id = result.url.split("/").dropLast(1).last().toInt()
+                            Pokemon(id, result.name.capitalize())
+                        }
+                        _pokemonList.value = pokemonList
+                    }
                 }
-
             }
 
-            override fun onFailure(call: Call<PokeRespuesta>, t: Throwable) {
-                call.cancel()
+            override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
+                // Handle failure
             }
-
         })
     }
 }
+
+/*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.pokeapi20.data.ApiClient
+import com.example.pokeapi20.data.PokemonResponse
+import com.example.pokeapi20.data.Pokemon
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+class PokeListViewModel : ViewModel() {
+
+    private val _pokemonList = MutableLiveData<List<Pokemon>>()
+    val pokemonList: LiveData<List<Pokemon>> get() = _pokemonList
+
+    init {
+        getPokemons()
+    }
+
+    fun getPokemons() {
+        ApiClient.pokeApiService.getPokemonList().enqueue(object : Callback<PokemonResponse> {
+            override fun onResponse(call: Call<PokemonResponse>, response: Response<PokemonResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.results?.let { results ->
+                        val pokemonList = results.map { result ->
+                            val id = result.url.split("/").dropLast(1).last().toInt()
+                            Pokemon(id, result.name.capitalize(), "", "", "", "", "", "")
+                        }
+                        _pokemonList.value = pokemonList
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
+                // Handle failure
+            }
+        })
+    }
+}
+
+ */

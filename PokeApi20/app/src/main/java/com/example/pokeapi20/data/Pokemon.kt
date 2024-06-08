@@ -3,6 +3,19 @@ package com.example.pokeapi20.data
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+data class Pokemon(
+    val id: Int,
+    val name: String,
+    val imageUrl: String = "",
+    val height: String = "",
+    val weight: String = "",
+    val type: String = "",
+    val baseExperience: String = "",
+    val description: String = ""
+)
+
+
+/*
 data class Pokemon (
     @Expose @SerializedName("id") val id: Int,
     @Expose @SerializedName("name") val name: String,
@@ -14,6 +27,16 @@ data class Pokemon (
     @Expose @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntry>,
 
     var spanishFlavorTextEntries: List<String> = emptyList()
+)
+
+data class Type(
+    @Expose @SerializedName("slot") val slot: Int,
+    @Expose @SerializedName("type") val type: TypeDetail
+)
+
+data class TypeDetail(
+    @Expose @SerializedName("name") val name: String,
+    @Expose @SerializedName("url") val url: String
 )
 
 data class FlavorTextEntry(
@@ -41,3 +64,5 @@ data class PokeResult(
     @Expose @SerializedName("name") val name: String,
     @Expose @SerializedName("url") val url: String
 )
+
+ */

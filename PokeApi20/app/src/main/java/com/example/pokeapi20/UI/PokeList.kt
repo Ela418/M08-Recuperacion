@@ -1,17 +1,16 @@
 package com.example.pokeapi20.UI
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pokeapi20.databinding.ActivityMainBinding
 import com.example.pokeapi20.model.PokeAdapter
-import com.example.pokeapi20.model.PokeInfoViewModel
 import com.example.pokeapi20.model.PokeListViewModel
 
-class PokeList: AppCompatActivity() {
+class PokeListActivity : AppCompatActivity() {
 
     private lateinit var viewModel: PokeListViewModel
     private lateinit var binding: ActivityMainBinding
@@ -27,18 +26,18 @@ class PokeList: AppCompatActivity() {
         initUI()
     }
 
-    private fun initUI(){
+    private fun initUI() {
         binding.pokelistRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        pokeAdapter = PokeAdapter {
+        pokeAdapter = PokeAdapter { id ->
             val intent = Intent(this, PokeInfoActivity::class.java)
-            intent.putExtra("id", it)
+            intent.putExtra("id", id)
             startActivity(intent)
         }
 
         binding.pokelistRecyclerView.adapter = pokeAdapter
 
-        viewModel.getPokemonList()
+        viewModel.getPokemons()
         viewModel.pokemonList.observe(this, Observer { list ->
             pokeAdapter.setData(list)
         })
