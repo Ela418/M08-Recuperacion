@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Reproductorv1.0</string>
+    <string name="song_name">Song Name</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+</resources>
